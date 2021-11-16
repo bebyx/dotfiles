@@ -102,3 +102,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Make manpages show percentage from the start
 export MANPAGER='less -s -M +Gg'
+
+# Fix YADM encrypt error with GPG
+export GPG_TTY=$(tty)
