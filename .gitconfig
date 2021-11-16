@@ -1,3 +1,10 @@
 [user]
 	name = bebyx
 	email = bebyx@protonmail.com
+[github]
+	user = bebyx
+[core]
+	editor = vim
+	autocrlf = input
+	safecrlf = true
+
