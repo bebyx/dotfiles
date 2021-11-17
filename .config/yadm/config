@@ -1,0 +1,3 @@
+[yadm]
+	cipher = gpg
+	gpg-recipient = artem.bebyk@gmail.com
