@@ -111,3 +111,6 @@ HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=1000000
 export SAVEHIST=$HISTSIZE
 alias history='history -d -20'
+
+# Enable vi mode
+bindkey -v
