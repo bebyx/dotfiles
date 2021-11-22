@@ -105,3 +105,9 @@ export MANPAGER='less -s -M +Gg'
 
 # Fix YADM encrypt error with GPG
 export GPG_TTY=$(tty)
+
+# Handle cmd history
+HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=1000000
+export SAVEHIST=$HISTSIZE
+alias history='history -d -20'
