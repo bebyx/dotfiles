@@ -1,5 +1,16 @@
+;;; init.el --- Initialization file for Emacs.
+;;; Commentary:
+;; bebyx initialization file for Emacs
+
+;;; Code:
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
+(cua-mode)
+
 (setq visible-bell t) ; switch off annoying bell sound, instead bell is visible
-(load-theme 'wombat) ; dark theme
+
 (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 140 :width 'normal)
 
 (column-number-mode)
@@ -21,6 +32,7 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Initialize package sources
+
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -47,7 +59,7 @@
   (auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe)
-  (auto-package-update-at-time "00:00"))
+  (auto-package-update-at-time "21:00"))
 
 ;; Use keybindings when Ukrainian layout is on
 (use-package reverse-im
@@ -59,14 +71,16 @@
 ;; Helm config
 (use-package helm
   :bind (
+	 ("C-x b" . helm-buffers-list)
 	 ("M-x" . helm-M-x)
 	 ("C-x C-f" . helm-find-files)
 	 ("C-s" . helm-occur))
   :config
   (helm-mode 1))
 
-;; Dev, mostly Java, config
+;; Dev config
 (use-package markdown-mode)
+(use-package yaml-mode)
 (use-package lsp-java
   :config
   (add-hook 'java-mode-hook 'lsp))
@@ -74,5 +88,66 @@
 (use-package helm-lsp)
 (use-package lsp-treemacs)
 (use-package treemacs
-  :bind (
-	 ("C-t" . treemacs)))
+  :bind ("C-t" . treemacs)
+  :config
+  (setq treemacs-width 30))
+
+(use-package scala-mode
+  :interpreter
+  ("scala" . scala-mode))
+
+;; Enable sbt mode for executing sbt commands
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+;; Enable nice rendering of diagnostics like compile errors.
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(use-package helm-flycheck)
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+
+(use-package lsp-mode
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook
+  (scala-mode . lsp)
+  (lsp-mode . lsp-lens-mode)
+  :config
+  ;; Tune lsp-mode performance according to
+  ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+  (setq gc-cons-threshold 100000000) ;; 100mb
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-log-io nil)
+  (defvar lsp-completion-provider :capf)
+  (defvar lsp-prefer-flymake nil))
+
+;; Add metals backend for lsp-mode
+(use-package lsp-metals)
+
+;; Use company-capf as a completion provider.
+(use-package company
+  :hook
+  (scala-mode . company-mode)
+  :config
+  (defvar lsp-completion-provider :capf))
+
+;; Beautiful dark theme
+(use-package solarized-theme
+  :init (load-theme 'solarized-dark-high-contrast)
+  :config
+  (setq solarized-high-contrast-mode-line t)
+  (setq solarized-distinct-fringe-background t))
+
+(provide 'init)
+;;; init.el ends here
