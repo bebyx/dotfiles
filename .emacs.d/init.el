@@ -132,6 +132,7 @@
   (scala-mode . lsp)
   (lsp-mode . lsp-lens-mode)
   :config
+  (lsp-enable-which-key-integration t)
   ;; Tune lsp-mode performance according to
   ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
   (setq gc-cons-threshold 100000000) ;; 100mb
@@ -174,6 +175,11 @@
   :init
   (setq solarized-distinct-fringe-background t)
   (load-theme 'solarized-dark-high-contrast))
+
+(use-package which-key
+  :init
+  (which-key-mode)
+  (setq which-key-idle-delay 1))
 
 (provide 'init)
 ;;; init.el ends here
