@@ -87,10 +87,11 @@
 ;; Dev config
 (use-package markdown-mode)
 (use-package yaml-mode)
+(use-package gradle-mode)
+
 (use-package lsp-java
   :config
   (add-hook 'java-mode-hook 'lsp))
-(use-package gradle-mode)
 (use-package helm-lsp)
 (use-package lsp-treemacs)
 (use-package treemacs
@@ -124,6 +125,8 @@
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
 (use-package lsp-mode
+  :bind-keymap
+  ("C-c l" . lsp-command-map)
   ;; Optional - enable lsp-mode automatically in scala files
   :hook
   (scala-mode . lsp)
@@ -147,6 +150,19 @@
   (scala-mode . company-mode)
   :config
   (defvar lsp-completion-provider :capf))
+
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'helm))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/Projects")
+    (setq projectile-project-search-path '("~/Projects")))
+  (setq projectile-switch-project-action #'projectile-dired))
+;; (use-package helm-projectile)
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
