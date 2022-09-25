@@ -11,7 +11,13 @@
 
 (setq visible-bell t) ; switch off annoying bell sound, instead bell is visible
 
-(set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 140 :width 'normal)
+(set-face-attribute 'default nil
+		    :family "Source Code Pro"
+		    :foundry "ADBO"
+		    :slant 'normal
+		    :weight 'normal
+		    :height 140
+		    :width 'normal)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -142,12 +148,16 @@
   :config
   (defvar lsp-completion-provider :capf))
 
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-checker-simple-format t))
+
 ;; Beautiful dark theme
 (use-package solarized-theme
-  :init (load-theme 'solarized-dark-high-contrast)
-  :config
-  (setq solarized-high-contrast-mode-line t)
-  (setq solarized-distinct-fringe-background t))
+  :init
+  (setq solarized-distinct-fringe-background t)
+  (load-theme 'solarized-dark-high-contrast))
 
 (provide 'init)
 ;;; init.el ends here
