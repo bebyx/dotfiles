@@ -131,8 +131,7 @@
   :hook
   (scala-mode . lsp)
   (lsp-mode . lsp-lens-mode)
-  :config
-  (lsp-enable-which-key-integration t)
+  (lsp-mode . lsp-enable-which-key-integration)
   ;; Tune lsp-mode performance according to
   ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
   (setq gc-cons-threshold 100000000) ;; 100mb
