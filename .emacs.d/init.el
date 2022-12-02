@@ -88,12 +88,43 @@
 (use-package markdown-mode)
 (use-package yaml-mode)
 (use-package gradle-mode)
+(use-package git-modes)
+(use-package rainbow-delimiters
+  :hook
+  (haskell-mode . rainbow-delimiters-mode)
+  (scheme-mode . rainbow-delimiters-mode)
+  (emacs-lisp-mode . rainbow-delimiters-mode))
+(use-package yasnippet)
 
+(use-package lsp-mode
+  :bind-keymap
+  ("C-c l" . lsp-command-map)
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook
+  (scala-mode . lsp)
+  (lsp-mode . lsp-lens-mode)
+  (lsp-mode . lsp-enable-which-key-integration)
+  :config
+  ;; Tune lsp-mode performance according to
+  ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+  (setq gc-cons-threshold 100000000) ;; 100mb
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-log-io nil)
+  (defvar lsp-completion-provider :capf)
+  (defvar lsp-prefer-flymake nil)
+  ;; Makes LSP shutdown the metals server when all buffers in the project are closed.
+  ;; https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-keep-workspace-alive
+  (setq lsp-keep-workspace-alive nil))
+(use-package lsp-ui)
+
+(use-package lsp-metals)
 (use-package lsp-java
   :config
   (add-hook 'java-mode-hook 'lsp))
 (use-package helm-lsp)
 (use-package lsp-treemacs)
+
 (use-package treemacs
   :bind ("C-t" . treemacs)
   :config
@@ -123,26 +154,6 @@
 (use-package helm-flycheck)
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-
-(use-package lsp-mode
-  :bind-keymap
-  ("C-c l" . lsp-command-map)
-  ;; Optional - enable lsp-mode automatically in scala files
-  :hook
-  (scala-mode . lsp)
-  (lsp-mode . lsp-lens-mode)
-  (lsp-mode . lsp-enable-which-key-integration)
-  ;; Tune lsp-mode performance according to
-  ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-  (setq gc-cons-threshold 100000000) ;; 100mb
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-log-io nil)
-  (defvar lsp-completion-provider :capf)
-  (defvar lsp-prefer-flymake nil))
-
-;; Add metals backend for lsp-mode
-(use-package lsp-metals)
 
 ;; Use company-capf as a completion provider.
 (use-package company
