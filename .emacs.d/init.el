@@ -24,7 +24,10 @@
 (fringe-mode 10)
 
 (size-indication-mode t)
-(scroll-bar-mode -1)
+(scroll-bar-mode -1) ; Disable visible scrollbar
+(tool-bar-mode -1)   ; Disable the toolbar
+(tooltip-mode -1)    ; Disable tooltips
+(menu-bar-mode -1)   ; Disable the menu bar
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -87,6 +90,7 @@
 ;; Dev config
 (use-package markdown-mode)
 (use-package yaml-mode)
+(use-package groovy-mode)
 (use-package gradle-mode)
 (use-package git-modes)
 (use-package rainbow-delimiters
