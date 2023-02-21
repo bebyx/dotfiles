@@ -7,6 +7,8 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 (cua-mode)
 
 (setq visible-bell t) ; switch off annoying bell sound, instead bell is visible
@@ -92,6 +94,7 @@
 (use-package yaml-mode)
 (use-package groovy-mode)
 (use-package gradle-mode)
+(use-package haskell-mode)
 (use-package git-modes)
 (use-package rainbow-delimiters
   :hook
@@ -124,8 +127,12 @@
 
 (use-package lsp-metals)
 (use-package lsp-java
-  :config
-  (add-hook 'java-mode-hook 'lsp))
+  :hook
+  (java-mode . lsp))
+(use-package lsp-haskell
+  :hook
+  (haskell-mode . lsp)
+  (haskell-literate-mode . lsp))
 (use-package helm-lsp)
 (use-package lsp-treemacs)
 
