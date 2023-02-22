@@ -9,6 +9,10 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+;; Glue GHCup path to Haskell LSP
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
+(setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
+
 (cua-mode)
 
 (setq visible-bell t) ; switch off annoying bell sound, instead bell is visible
