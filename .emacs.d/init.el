@@ -93,12 +93,18 @@
   :config
   (helm-mode 1))
 
+(use-package exec-path-from-shell)
+(exec-path-from-shell-initialize)
+
 ;; Dev config
 (use-package markdown-mode)
 (use-package yaml-mode)
+(use-package web-mode
+  :mode "\\.ejs\\'")
 (use-package groovy-mode)
 (use-package gradle-mode)
 (use-package haskell-mode)
+(use-package php-mode)
 (use-package git-modes)
 (use-package rainbow-delimiters
   :hook
@@ -106,6 +112,10 @@
   (scheme-mode . rainbow-delimiters-mode)
   (emacs-lisp-mode . rainbow-delimiters-mode))
 (use-package yasnippet)
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :interpreter "node")
+(use-package typescript-mode)
 
 (use-package lsp-mode
   :bind-keymap
@@ -113,6 +123,7 @@
   ;; Optional - enable lsp-mode automatically in scala files
   :hook
   (scala-mode . lsp)
+  ((js2-mode typescript-mode) . lsp)
   (lsp-mode . lsp-lens-mode)
   (lsp-mode . lsp-enable-which-key-integration)
   :config
@@ -126,8 +137,23 @@
   (defvar lsp-prefer-flymake nil)
   ;; Makes LSP shutdown the metals server when all buffers in the project are closed.
   ;; https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-keep-workspace-alive
-  (setq lsp-keep-workspace-alive nil))
-(use-package lsp-ui)
+  (setq lsp-keep-workspace-alive nil)
+
+  ;; JS config
+  (defvar lsp-clients-typescript-server 'node)
+  (defvar lsp-typescript-server-args '("--stdio" "--tsserver-logFile" "/tmp/tsserver.log"))
+  (defvar lsp-eslint-enable t)
+  (defvar lsp-eslint-auto-fix-on-save t))
+
+(use-package lsp-ui
+  :after lsp-mode
+  :config
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-header t)
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-sideline-ignore-duplicate t)
+  (setq lsp-ui-sideline-show-hover t))
 
 (use-package lsp-metals)
 (use-package lsp-java
@@ -174,6 +200,7 @@
 (use-package company
   :hook
   (scala-mode . company-mode)
+  (js2-mode . company-mode)
   :config
   (defvar lsp-completion-provider :capf))
 
@@ -193,7 +220,8 @@
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :config
-  (setq doom-modeline-checker-simple-format t))
+  (setq doom-modeline-checker-simple-format t)
+  (setq doom-modeline-icon t))
 
 ;; Beautiful dark theme
 (use-package solarized-theme
